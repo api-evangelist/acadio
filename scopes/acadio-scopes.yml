@@ -1,0 +1,29 @@
+generated: '2026-09-06'
+method: probed
+source: https://acadio.com/.well-known/openid-configuration
+docs: https://acadio.instantdocsbase.com/help/google-oauth-2-dot-0-documentation
+description: >-
+  Acadio's only machine-readable scope surface is the OpenID Connect discovery document served from
+  acadio.com — the Shopify customer-accounts authorization server scoped to Acadio's shop. The Acadio
+  LMS itself documents no OAuth scope model: its JWT single sign-on carries user attributes and
+  group/credit associations rather than scopes, and the Google OAuth 2.0 integration delegates scope
+  definition to Google. Nothing below is derived or inferred; the list is transcribed from the
+  provider-served document.
+authorization_server: https://shopify.com/authentication/78091452669
+scope_count: 4
+scopes:
+- name: openid
+  description: Standard OpenID Connect scope requesting an ID token.
+- name: email
+  description: Releases the customer's email address and email_verified claim.
+- name: customer-account-api:full
+  description: Full access to the storefront Customer Account API for the signed-in buyer.
+- name: customer-account-mcp-api:full
+  description: >-
+    Full access to the customer-account MCP API for the signed-in buyer — the authenticated
+    counterpart to the anonymous UCP commerce MCP endpoint at https://acadio.com/api/ucp/mcp.
+claims_supported: [iss, sub, aud, exp, iat, nonce, sid, email, email_verified]
+notes:
+- >-
+  These scopes govern the acadio.com course storefront, not the Acadio LMS platform. There is no
+  published scope reference page and no scopes documented for api.acadio.com.

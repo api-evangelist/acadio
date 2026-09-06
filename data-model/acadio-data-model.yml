@@ -1,0 +1,187 @@
+generated: '2026-09-06'
+method: derived
+source: >-
+  mcp/acadio-mcp-tools.json (13 probed tool inputSchemas from https://acadio.com/api/ucp/mcp) and
+  asyncapi/acadio-lms-webhooks.yml (19 webhook topics transcribed from
+  https://acadio.instantdocsbase.com/help/webhooks-documentation), cross-checked against
+  https://acadio.instantdocsbase.com/help/jwt-auth-documentation
+description: >-
+  Acadio publishes no OpenAPI and no object reference, so this graph is derived from the only two
+  places its entities are named machine-side: the JSON Schema inputSchemas of the storefront UCP MCP
+  tools, and the topic namespace of the LMS webhook bus. Fields marked from the webhook side are
+  entity NAMES only — Acadio does not publish per-topic payload schemas, so no attributes are
+  asserted for those entities.
+domains:
+- id: commerce
+  surface: https://acadio.com/api/ucp/mcp
+  evidence: probed tool inputSchemas
+- id: learning
+  surface: Acadio LMS webhook topic namespace
+  evidence: documented topic patterns; payload shapes not published
+entities:
+- name: Product
+  domain: commerce
+  identified_by: identifier (opaque string)
+  operations: [search_catalog, lookup_catalog, get_product]
+  attributes_source: search_catalog / get_product inputSchema
+  note: >-
+    Acadio's products are its own securities exam prep courses. Filterable by categories, price range
+    and availability; searchable by free-text query with cursor pagination.
+- name: Cart
+  domain: commerce
+  identified_by: id (string)
+  operations: [create_cart, get_cart, update_cart, cancel_cart]
+  attributes: [line_items, buyer, context, attribution, fulfillment, discounts]
+- name: LineItem
+  domain: commerce
+  attributes: [id, quantity, item]
+  note: Embedded in Cart and Checkout; not independently addressable.
+- name: Checkout
+  domain: commerce
+  identified_by: 'id (string, format gid://shopify/Checkout/{id})'
+  operations: [create_checkout, get_checkout, update_checkout, complete_checkout, cancel_checkout]
+  attributes: [cart_id, line_items, buyer, payment, context, attribution, fulfillment, discounts]
+- name: Buyer
+  domain: commerce
+  attributes: [email, phone_number]
+  note: Embedded value object on Cart and Checkout; no standalone buyer resource is exposed.
+- name: PaymentInstrument
+  domain: commerce
+  attributes: [id, handler_id, type, billing_address, credential]
+  handlers: [com.google.pay, dev.shopify.card]
+- name: Order
+  domain: commerce
+  identified_by: id (string)
+  operations: [get_order]
+  note: Read-only. No create, update, cancel or refund operation is exposed for an order.
+- name: User
+  domain: learning
+  identified_by: email (unique)
+  attributes: [email, firstName, lastName, meta, groups, credits, onboard]
+  attributes_source: JWT Auth payload field table
+  events: [identity/user/create, identity/user/update]
+- name: Group
+  domain: learning
+  identified_by: numeric group ID
+  attributes_source: JWT Auth payload (groups array of integer IDs)
+- name: Credit
+  domain: learning
+  identified_by: id (integer, Acadio credit instance)
+  attributes: [orderId, id]
+  attributes_source: JWT Auth Credit object table
+  events: [credits/credit/create, credits/credit/update, credits/user/create, credits/user/update]
+- name: Course
+  domain: learning
+  events: [course/activity/create, course/activity/update]
+- name: Activity
+  domain: learning
+  note: >-
+    A unit inside a course. Types named in the docs include book, PDF, link, quiz, exam and SCORM;
+    external completion events are unavailable for SCORM, PDF, Link, Quiz and Exam activities.
+  events: [course/activity/create, course/activity/update]
+- name: CourseCompletion
+  domain: learning
+  states: [Requires Approval, Ready]
+  events: [course/completion/create, course/completion/update, course/completion/report]
+- name: AssessmentSession
+  domain: learning
+  events: [assessment/session/create, assessment/session/complete]
+- name: Survey
+  domain: learning
+  events: [surveys/survey/create, surveys/survey/update, surveys/survey/complete]
+- name: Submission
+  domain: learning
+  events: [course/submission/create, course/submission/update, course/submission/feedback]
+- name: Regulator
+  domain: learning
+  note: >-
+    Named only as the target a student selects when reporting a course completion
+    (course/completion/report). No regulator resource, list or identifier scheme is published.
+relationships:
+- from: Checkout
+  to: Cart
+  type: belongs_to
+  via: cart_id
+  confidence: high
+- from: Cart
+  to: LineItem
+  type: has_many
+  via: line_items[]
+  confidence: high
+- from: Checkout
+  to: LineItem
+  type: has_many
+  via: line_items[]
+  confidence: high
+- from: LineItem
+  to: Product
+  type: belongs_to
+  via: item
+  confidence: high
+- from: Checkout
+  to: PaymentInstrument
+  type: has_many
+  via: payment.instruments[]
+  confidence: high
+- from: Order
+  to: Checkout
+  type: belongs_to
+  via: completion of a checkout returns the order
+  confidence: medium
+  note: Inferred from the tool set (complete_checkout then get_order); not stated in a schema.
+- from: User
+  to: Group
+  type: has_many
+  via: groups[] (full synchronization)
+  confidence: high
+- from: User
+  to: Credit
+  type: has_many
+  via: credits[] (full synchronization)
+  confidence: high
+- from: Credit
+  to: Order
+  type: belongs_to
+  via: orderId (string, max 32 chars)
+  confidence: medium
+  note: >-
+    The JWT Credit object carries an orderId "associated with the credit". Whether this is the
+    storefront Order above or an arbitrary external order reference is not stated; treated as an
+    external order reference.
+- from: CourseCompletion
+  to: Course
+  type: belongs_to
+  confidence: medium
+  note: Implied by the course/completion/* topic namespace; no payload schema published.
+- from: CourseCompletion
+  to: User
+  type: belongs_to
+  confidence: medium
+- from: Activity
+  to: Course
+  type: belongs_to
+  confidence: medium
+- from: AssessmentSession
+  to: User
+  type: belongs_to
+  confidence: medium
+- from: Submission
+  to: Course
+  type: belongs_to
+  confidence: medium
+id_schemes:
+- entity: Checkout
+  scheme: 'gid://shopify/Checkout/{id}'
+  source: get_checkout inputSchema description
+- entity: User
+  scheme: email address (natural key)
+  source: JWT Auth documentation
+- entity: Group
+  scheme: integer ID
+- entity: Credit
+  scheme: integer ID
+gaps:
+- >-
+  The learning domain has 11 entities visible only as event topic names. Acadio publishes no payload
+  schema for any webhook topic, so an integrator knows an event fires but not what it carries until
+  they receive one.

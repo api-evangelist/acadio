@@ -1,0 +1,104 @@
+generated: '2026-09-06'
+method: probed
+source: >-
+  POST https://acadio.com/api/ucp/mcp with {"jsonrpc":"2.0","id":1,"method":"tools/list"} — HTTP 200,
+  application/json, 13 tools returned with full JSON Schema inputSchemas. Endpoint named by
+  https://acadio.com/llms.txt and https://acadio.com/agents.md; merchant profile at
+  https://acadio.com/.well-known/ucp.
+name: Acadio Storefront (Universal Commerce Protocol)
+description: >-
+  A live, unauthenticated remote MCP server on Acadio's own domain that exposes the company's
+  direct-to-learner securities exam prep storefront to agents: catalog search and lookup, cart
+  construction, checkout lifecycle and order retrieval. It is a Universal Commerce Protocol
+  (dev.ucp.shopping) service provided by the Shopify commerce platform Acadio's storefront runs on,
+  served from acadio.com and identified in its own merchant profile as merchant_name "Acadio",
+  merchant_origin "acadio.com". It does NOT expose the Acadio LMS platform.
+status: live
+deployment:
+  mode: remote
+  endpoint: https://acadio.com/api/ucp/mcp
+  auth: none
+  verified: probed
+  note: >-
+    No install step and no stdio package — an agent can POST to this URL today. tools/list answers
+    anonymously; completing a checkout still requires contemporaneous buyer approval per the
+    published agent instructions.
+protocol:
+  transport: mcp
+  ucp_versions:
+  - '2026-08-25'
+  - '2026-04-08'
+  - '2026-01-23'
+  ucp_service: dev.ucp.shopping
+  openrpc_schema: https://ucp.dev/2026-08-25/services/shopping/mcp.openrpc.json
+  note: >-
+    The OpenRPC schema above is published by the UCP specification, not by Acadio; it is referenced
+    from Acadio's own /.well-known/ucp document and is recorded as the shape the endpoint implements,
+    not as an Acadio-authored contract.
+tool_count: 13
+tools:
+- name: search_catalog
+  category: catalog
+  description: Search for products from the online store, hosted on Shopify.
+  required: [meta, catalog]
+- name: lookup_catalog
+  category: catalog
+  description: Look up multiple products or variants by identifier.
+  required: [meta, catalog]
+- name: get_product
+  category: catalog
+  description: Retrieve complete product detail by identifier. Returns a singular product.
+  required: [meta, catalog]
+- name: get_cart
+  category: cart
+  description: Get the cart contents.
+  required: [meta, id]
+- name: create_cart
+  category: cart
+  description: Creates a new cart.
+  required: [meta, cart]
+- name: update_cart
+  category: cart
+  description: Perform updates to a cart.
+  required: [meta, cart, id]
+- name: cancel_cart
+  category: cart
+  description: Cancels a cart.
+  required: [meta, id]
+- name: get_checkout
+  category: checkout
+  description: Returns details about the checkout, including line items, totals, discounts and taxes.
+  required: [meta, id]
+- name: create_checkout
+  category: checkout
+  description: Creates a checkout and returns its line items, totals, discounts and taxes.
+  required: [meta, checkout]
+- name: update_checkout
+  category: checkout
+  description: Updates a checkout (shipping address, fulfillment method, discounts).
+  required: [meta, checkout, id]
+- name: complete_checkout
+  category: checkout
+  description: Completes a checkout and returns the checkout result. Requires buyer payment approval.
+  required: [meta, id, checkout]
+- name: cancel_checkout
+  category: checkout
+  description: Cancels a checkout.
+  required: [meta, id]
+- name: get_order
+  category: order
+  description: Get the details of an order.
+  required: [meta, id]
+raw_manifest: mcp/acadio-mcp-tools.json
+capabilities_declared:
+- dev.ucp.shopping.catalog.search
+- dev.ucp.shopping.catalog.lookup
+- dev.ucp.shopping.cart
+- dev.ucp.shopping.checkout
+- dev.ucp.shopping.fulfillment
+- dev.ucp.shopping.discount
+- dev.ucp.shopping.order
+- dev.shopify.catalog
+payment_handlers:
+- com.google.pay
+- dev.shopify.card

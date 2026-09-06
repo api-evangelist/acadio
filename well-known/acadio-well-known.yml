@@ -1,0 +1,109 @@
+generated: '2026-09-06'
+method: probed
+source: >-
+  Direct unauthenticated GET of the named /.well-known/ path list on every host this record knows —
+  the registrable domain and www, both API baseURL hosts, the docs host and the status host.
+notes: >-
+  acadio.com and www.acadio.com serve a real OpenID Connect / OAuth 2.0 authorization server
+  metadata document, supplied by the Shopify customer-accounts platform the storefront runs on and
+  served from Acadio's own domain. The same host also serves /.well-known/ucp, the Universal
+  Commerce Protocol merchant profile named by acadio.com/llms.txt, whose payment_handlers block
+  carries merchant_name "Acadio" and merchant_origin "acadio.com". No security.txt, api-catalog,
+  ai-plugin.json or agent card is served on any Acadio-controlled host. Every /.well-known/* path on
+  courses.acadio.com (and every other wildcard subdomain) answers 200 with the same 19,218-byte Vue
+  SPA shell — a catch-all, not a document — and is recorded here as a miss. The 200 security.txt on
+  acadio.statuspage.io is Atlassian's own PGP-signed platform document (Contact
+  security@atlassian.com, Canonical atlassian.com/.well-known/security.txt), not Acadio's, so it
+  earns Acadio no SecurityTxt pointer.
+hosts:
+- host: acadio.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: acadio-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: acadio-oauth-authorization-server.json
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/ucp
+    status: 200
+    file: acadio-ucp.json
+- host: www.acadio.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 200
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: api.acadio.com
+  note: >-
+    Kong API gateway. Every path answers 404 with the JSON body
+    {"message":"no Route matched with those values"} — a live gateway with no anonymous route.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: courses.acadio.com
+  note: >-
+    Wildcard SPA catch-all. Every path listed returned HTTP 200 with the identical 19,218-byte HTML
+    shell of the Acadio student portal, not a document; all are treated as misses.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    result: spa-shell-not-a-document
+  - path: /.well-known/openid-configuration
+    status: 200
+    result: spa-shell-not-a-document
+  - path: /.well-known/api-catalog
+    status: 200
+    result: spa-shell-not-a-document
+  - path: /.well-known/agent-card.json
+    status: 200
+    result: spa-shell-not-a-document
+  - path: /.well-known/agent.json
+    status: 200
+    result: spa-shell-not-a-document
+- host: acadio.instantdocsbase.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+- host: acadio.statuspage.io
+  note: >-
+    Third-party status host. The 200 security.txt here is Atlassian's platform-wide document, not
+    Acadio's, and is recorded but not credited to Acadio.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+  - path: /.well-known/agent-card.json
+    status: 404

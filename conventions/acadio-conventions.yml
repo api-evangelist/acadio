@@ -1,0 +1,141 @@
+generated: '2026-09-06'
+method: searched
+source: >-
+  https://acadio.instantdocsbase.com/help/webhooks-documentation ,
+  https://acadio.instantdocsbase.com/help/jwt-auth-documentation ,
+  https://acadio.com/llms.txt , https://acadio.com/agents.md , and the probed tools/list response
+  from https://acadio.com/api/ucp/mcp
+description: >-
+  Cross-cutting runtime semantics across Acadio's two public surfaces: the LMS integration surface
+  (JWT SSO in, HMAC-signed webhooks out) and the storefront UCP MCP commerce endpoint. Acadio
+  publishes no REST API reference, so several conventions that would normally be read from an
+  OpenAPI have no published answer; those are recorded as unknown rather than guessed.
+surfaces:
+- id: lms
+  base: https://api.acadio.com
+  contract: none published (Kong gateway, no anonymous route)
+- id: storefront-ucp
+  base: https://acadio.com/api/ucp/mcp
+  contract: MCP tools/list, JSON-RPC 2.0, JSON Schema 2020-12 inputSchemas
+auth_style:
+  lms: JWT single sign-on (shared-secret signed) and Google OAuth 2.0; no API credential published
+  storefront: anonymous for discovery and cart/checkout construction; buyer approves payment
+  reference: authentication/acadio-authentication.yml
+idempotency:
+  supported: false
+  coverage: none
+  mechanism: null
+  header: null
+  note: >-
+    No Idempotency-Key header, no request-id de-duplication and no replay-protection mechanism is
+    documented on either surface. On the webhook side the guarantee runs the other way: Acadio
+    retries a delivery up to 6 times until it sees a 2xx, so subscribers must make their own
+    handlers idempotent, and Acadio publishes no per-event id or delivery id to key that on. On the
+    UCP MCP surface, cart and checkout objects are addressed by an id returned from create_*, which
+    makes update_* naturally repeatable, but no idempotency contract is stated for the create or
+    complete calls.
+reversibility:
+  grade: documented
+  applies_to: storefront-ucp
+  note: >-
+    Reversal operations exist and are named in the provider's own tool list, but no reversal WINDOW
+    is stated anywhere Acadio publishes, so this grades as documented rather than verified. The
+    refund policy at https://acadio.com/policies/refund-policy is a consumer policy page and is not
+    exposed as an operation.
+  write_surfaces:
+  - operation: create_cart
+    reversal: cancel_cart
+    window_stated: false
+  - operation: create_checkout
+    reversal: cancel_checkout
+    window_stated: false
+  - operation: update_checkout
+    reversal: update_checkout
+    note: Mutations before completion are replaceable in place.
+    window_stated: false
+  - operation: complete_checkout
+    reversal: null
+    note: >-
+      No cancel, void, refund or reverse tool is exposed for a completed checkout. Once
+      complete_checkout succeeds, an agent has no published operation to undo it; recourse is the
+      store refund policy handled by a human.
+    window_stated: false
+  lms:
+    grade: na
+    note: >-
+      The LMS surface has no public write operations for a third party to reverse — webhooks are
+      outbound notifications and JWT SSO creates or updates a user as a side effect of a human login.
+dry_run_mode:
+  supported: false
+  note: No sandbox, test mode, test keys or simulation values are published for either surface.
+pagination:
+  documented: true
+  surface: storefront-ucp
+  style: cursor
+  params:
+    cursor: catalog.pagination.cursor (string)
+    limit: catalog.pagination.limit (integer)
+  source: >-
+    Read from the search_catalog inputSchema returned by a live tools/list at
+    https://acadio.com/api/ucp/mcp on 2026-09-06. It is a machine-readable convention, not a prose
+    one — Acadio publishes no pagination documentation, and the LMS surface has none at all.
+  lms_documented: false
+versioning:
+  lms: none published
+  storefront: >-
+    Universal Commerce Protocol date versions, negotiated by the client — 2026-08-25 (latest stable),
+    2026-04-08 and 2026-01-23 are advertised at https://acadio.com/.well-known/ucp.
+error_envelope:
+  storefront: JSON-RPC 2.0 error object (MCP transport default). No Acadio-specific error catalog.
+  webhooks: >-
+    Errors are expressed by the subscriber, not Acadio: any non-2xx response from the subscriber
+    endpoint triggers a retry, up to 6 attempts, after which the tenant's configured email address
+    receives a failure notification.
+  lms: not documented
+  rfc9457: false
+request_tracing:
+  storefront:
+    header: x-request-id
+    observed: true
+    note: >-
+      Observed 2026-09-06 on a live tools/list response, alongside a Cloudflare/Shopify
+      server-timing header carrying an internal requestID. Not documented by Acadio.
+  lms:
+    note: >-
+      The api.acadio.com Kong gateway returns a request_id field in its 404 JSON body, which is an
+      operational detail of the gateway rather than a documented tracing convention.
+rate_limit_signaling:
+  reference: rate-limits/acadio-rate-limits.yml
+  note: >-
+    Published guidance is qualitative — "the MCP endpoint is rate-limited per IP, back off on 429
+    responses" — with no numeric limit and no RateLimit-* or Retry-After header observed on an
+    unauthenticated request.
+webhook_conventions:
+  signature_header: X-Acadio-Hmac-Sha256
+  signature_algorithm: HMAC SHA-256
+  ack_contract: subscriber must return 2xx
+  retry_attempts: 6
+  topic_wildcards: true
+  reference: asyncapi/acadio-lms-webhooks.yml
+synchronization_semantics:
+  scope: JWT SSO payload
+  rule: >-
+    The groups and credits arrays are FULL synchronization, not partial updates. Omitting the field
+    leaves existing associations unchanged; supplying values replaces them; supplying an empty array
+    removes all of them. This is the single most consequential runtime semantic Acadio documents —
+    an integrator who omits a field and an integrator who sends [] get opposite outcomes.
+  source: https://acadio.instantdocsbase.com/help/jwt-auth-documentation
+agent_guidance:
+  source: https://acadio.com/agents.md
+  rules:
+  - Checkout requires contemporaneous human approval; agents must not complete payment without it.
+  - Respect per-IP rate limits on the MCP endpoint and back off on 429.
+  - Pass context.address_country and context.currency for accurate pricing and availability.
+  - Prices are integers in ISO 4217 minor units paired with a currency code; convert before quoting.
+cross_links:
+  authentication: authentication/acadio-authentication.yml
+  scopes: scopes/acadio-scopes.yml
+  lifecycle: lifecycle/acadio-lifecycle.yml
+  rate_limits: rate-limits/acadio-rate-limits.yml
+  webhooks: asyncapi/acadio-lms-webhooks.yml
+  data_model: data-model/acadio-data-model.yml

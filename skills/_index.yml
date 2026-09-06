@@ -1,0 +1,22 @@
+generated: '2026-09-06'
+method: generated
+source: >-
+  mcp/acadio-mcp-tools.json (live tools/list probe, 2026-09-06) and https://acadio.com/agents.md
+description: >-
+  Packaged Agent Skills for Acadio. Grounded in the only machine-readable contract Acadio publishes —
+  the 13 tool schemas of its Universal Commerce Protocol MCP endpoint. No skill is written for the
+  Acadio LMS platform because it publishes no callable contract to ground one in.
+skills:
+- name: acadio-buy-exam-prep-course
+  file: skills/acadio-buy-exam-prep-course.md
+  api: Acadio Storefront Agentic Commerce (UCP)
+  endpoint: https://acadio.com/api/ucp/mcp
+  operations: 13
+  flow: search_catalog -> get_product -> create_cart -> create_checkout -> update_checkout -> complete_checkout -> get_order
+  provider_published: false
+not_written:
+- surface: Acadio LMS
+  reason: >-
+    No OpenAPI, no API reference and no anonymous route on the api.acadio.com gateway. The documented
+    LMS entry points (JWT SSO callback, HMAC-signed outbound webhooks) are integration hooks a human
+    installs per tenant, not operations an agent can call.

@@ -64,5 +64,20 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Acadio is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://equityzen.com/company/acadio
+Acadio is a professional-education technology company that builds and operates **Acadio LMS**, a
+white-label, cloud-hosted learning management system for continuing education, exam prep and
+certification training. It also sells its own FINRA securities licensing exam prep courses (SIE,
+Series 6, Series 7, Series 63) direct to learners.
+
+**What this profile found (2026-09-06).** Acadio publishes no OpenAPI and no API reference. Its
+LMS integration surface is documented in a knowledge base — inbound JWT single sign-on, Google
+OAuth 2.0, and an HMAC-signed outbound webhook bus with 19 topics — while `api.acadio.com` runs a
+live Kong gateway with no anonymous route. Its storefront, however, serves a real `llms.txt`, an
+`agents.md`, a Universal Commerce Protocol merchant profile at `/.well-known/ucp`, and a live,
+unauthenticated remote MCP endpoint at `https://acadio.com/api/ucp/mcp` that answers `tools/list`
+with 13 catalog, cart, checkout and order tools.
+
+- Website: https://acadio.com/
+- Knowledge base: https://acadio.instantdocsbase.com/
+- Status: https://acadio.statuspage.io/
+- Secondary-market listing: https://equityzen.com/company/acadio

@@ -1,0 +1,120 @@
+generated: '2026-09-06'
+method: searched
+source: >-
+  https://acadio.instantdocsbase.com/help/jwt-auth-documentation ,
+  https://acadio.instantdocsbase.com/help/google-oauth-2-dot-0-documentation ,
+  https://acadio.instantdocsbase.com/help/webhooks-documentation , and the probed
+  https://acadio.com/.well-known/openid-configuration
+docs: https://acadio.instantdocsbase.com/help/jwt-auth-documentation
+description: >-
+  Acadio publishes no OpenAPI and therefore no securitySchemes block. Its authentication surface is
+  documented in the knowledge base as three distinct mechanisms — inbound JWT single sign-on into
+  the LMS, Google OAuth 2.0 as a login provider, and HMAC request signing on the outbound webhook
+  bus — plus a Shopify-supplied OpenID Connect provider on the storefront domain.
+schemes:
+- id: jwt-auth
+  surface: Acadio LMS (student and admin portals)
+  type: http
+  scheme: bearer
+  bearer_format: JWT
+  direction: inbound
+  purpose: >-
+    Create and/or authenticate users from the customer's own systems (single sign-on). The customer
+    signs a JWT server-side with a shared secret configured in the Acadio Admin portal under
+    Settings > Integrations > JWT Auth.
+  endpoint: https://{domain}/auth/callback/jwt-auth?token={token}&go={path}
+  endpoint_note: >-
+    {domain} is the tenant's Acadio domain or custom domain. The optional go parameter controls the
+    post-authentication landing path; omitted, the user lands on the dashboard.
+  credential: shared secret (symmetric), configured per tenant
+  optional_claims:
+  - max-age
+  - issuer
+  payload_fields:
+  - name: email
+    required: true
+    type: string
+    description: The user's unique email address.
+  - name: firstName
+    required: false
+    type: string
+  - name: lastName
+    required: false
+    type: string
+  - name: meta
+    required: false
+    type: object
+    description: Custom JSON data to associate with the user.
+  - name: groups
+    required: false
+    type: array
+    description: A list of group IDs to associate with the user. Full synchronization semantics.
+  - name: credits
+    required: false
+    type: array
+    description: A list of Credit objects (orderId string max 32 chars, id integer) to associate with the user.
+  - name: onboard
+    required: false
+    type: boolean
+    description: When true, a newly created user is redirected to onboarding.
+  security_guidance: >-
+    Acadio states the signing secret must be kept strictly server-side, that token generation must
+    happen only in a trusted server environment, and that tokens should be short-lived via the
+    max-age claim. Removing the integration causes Acadio to reject the secret and all signed tokens.
+- id: google-oauth2
+  surface: Acadio LMS (student and admin portals)
+  type: oauth2
+  flow: authorization_code
+  direction: inbound
+  purpose: Single sign-on with Google as the identity provider.
+  redirect_uris:
+  - https://{your domain}.acadio.com/auth/callback/google-oauth
+  - https://admin.acadio.com/auth/callback/google-oauth
+  javascript_origins:
+  - https://{your domain}.acadio.com
+  - https://admin.acadio.com
+  credential: >-
+    Tenant-supplied Google Cloud OAuth 2.0 Client ID and Client Secret, entered in the Acadio Admin
+    portal under Settings > Apps > Google OAuth 2.0.
+  note: The Google OAuth 2.0 app is only available to authenticated registered users.
+- id: webhook-hmac
+  surface: Acadio LMS webhook deliveries
+  type: signature
+  algorithm: HMAC SHA-256
+  direction: outbound
+  header: X-Acadio-Hmac-Sha256
+  credential: per-integration secret key created by the tenant
+  purpose: Lets a subscriber verify a delivered payload originated from Acadio and was not altered.
+- id: shopify-customer-accounts-oidc
+  surface: acadio.com storefront (course purchases)
+  type: openIdConnect
+  direction: inbound
+  discovery: https://acadio.com/.well-known/openid-configuration
+  issuer: https://shopify.com/authentication/78091452669
+  authorization_endpoint: https://shopify.com/authentication/78091452669/oauth/authorize
+  token_endpoint: https://shopify.com/authentication/78091452669/oauth/token
+  jwks_uri: https://shopify.com/authentication/78091452669/.well-known/jwks.json
+  grant_types:
+  - authorization_code
+  - refresh_token
+  - 'urn:ietf:params:oauth:grant-type:jwt-bearer'
+  pkce: S256
+  id_token_signing_alg: RS256
+  note: >-
+    Provided by the Shopify customer-accounts platform and served from Acadio's own domain. The
+    issuer is a Shopify authentication tenant scoped to Acadio's shop (78091452669), so the document
+    is Acadio's storefront identity surface rather than a generic Shopify one.
+- id: ucp-mcp-anonymous
+  surface: https://acadio.com/api/ucp/mcp
+  type: none
+  direction: inbound
+  purpose: >-
+    The Universal Commerce Protocol MCP endpoint answers tools/list with no credential. Payment on
+    complete_checkout is authorized by the buyer through a payment handler (Google Pay or Shopify
+    card), not by an API credential.
+  verified: probed 2026-09-06 (HTTP 200, unauthenticated)
+gaps:
+- >-
+  No API key, no bearer-token API credential and no documented machine-to-machine authentication for
+  the api.acadio.com gateway. Every documented mechanism authenticates a HUMAN into the LMS or signs
+  an outbound event; none of them lets a third-party program call an Acadio LMS resource.

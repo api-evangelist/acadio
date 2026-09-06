@@ -1,0 +1,43 @@
+generated: '2026-09-06'
+method: searched
+source: >-
+  https://acadio.com/pages/lms-continuing-education (FAQ "How does pricing work?"),
+  https://acadio.com/pages/lms-solutions , https://acadio.com/pages/lms-demo
+docs: https://acadio.com/pages/lms-solutions
+description: >-
+  Acadio publishes a pricing MODEL but no priced tiers. There is no pricing page, no plan table and
+  no numbers anywhere on the site; every path to a figure ends at "Schedule a call with a product
+  specialist" or the demo request form. The direct-to-learner exam prep courses sold on the
+  storefront are priced individually as products, but those are course purchases, not API or
+  platform plans, and are excluded from plan_count.
+plan_count: 0
+plans: []
+pricing_model:
+  structure: flat rate per learner per month
+  metered: true
+  metering_basis: >-
+    Billed only for the months in which a learner actually uses the platform.
+  user_tiers: false
+  seat_licenses: false
+  statement: >-
+    "Our pricing model is easy, transparent, and fair. You won't be locked into a user tier or get
+    stuck paying for unused licenses. Instead, you pay one flat rate per learner per month, and only
+    pay for the months that they actually use the platform. Schedule a call with a product
+    specialist to learn more."
+  amount_published: false
+  currency: USD
+gate:
+  type: sales-gate
+  path: https://acadio.com/pages/lms-demo
+  note: >-
+    The rate itself is quoted by a product specialist. A prospective buyer cannot self-serve a price.
+api_plans:
+  published: false
+  note: >-
+    No API-specific plan, quota, tier or usage price is published for api.acadio.com or for the
+    storefront UCP MCP endpoint, which is free and unauthenticated to call.
+storefront_products:
+  note: >-
+    Individual exam prep course prices are readable machine-side at
+    https://acadio.com/products.json and through the search_catalog / get_product MCP tools. They are
+    consumer course prices, not platform plans.

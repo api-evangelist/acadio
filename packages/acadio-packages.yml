@@ -1,0 +1,31 @@
+generated: '2026-09-06'
+method: searched
+source: >-
+  registry.npmjs.org search "acadio", pypi.org/pypi/acadio/json (404), GitHub repository search
+  "acadio", github.com/acadio (200 but an unrelated account with 0 public repositories and website
+  wec2008-malaysia.com), github.com/acadiolms (404), and the Acadio site and knowledge base.
+description: >-
+  Acadio publishes no first-party client libraries, SDKs or CLI in any package registry, and operates
+  no GitHub organization. Its documented integration path is configuration inside the Acadio Admin
+  portal (install the JWT Auth, Google OAuth 2.0, Webhooks, Shopify, WooCommerce, BigCommerce, Zoom,
+  ProctorFree or ChatGPT app) rather than code a developer installs. This file records that absence;
+  no Packages or SDKs pointer is emitted, because there is nothing to point at.
+package_count: 0
+official_package_count: 0
+packages: []
+registries_checked:
+- registry: npm
+  query: acadio
+  result: no first-party package
+- registry: pypi
+  query: acadio
+  result: 404
+- registry: github
+  query: acadio
+  result: >-
+    38 unrelated repositories (AutoCAD ObjectARX helpers, school-management projects, a Java academic
+    system); none belongs to Acadio, Inc.
+sdk_guidance_published: false
+note: >-
+  For JWT single sign-on Acadio points integrators at the third-party library index jwt.io/libraries
+  rather than shipping a library of its own.

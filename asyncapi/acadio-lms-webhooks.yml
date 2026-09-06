@@ -1,0 +1,103 @@
+generated: '2026-09-06'
+method: searched
+source: https://acadio.instantdocsbase.com/help/webhooks-documentation
+docs: https://acadio.instantdocsbase.com/help/webhooks-documentation
+name: Acadio LMS Webhooks
+description: >-
+  Acadio LMS ships an outbound webhook bus, installed per tenant from Admin > Settings > Manage
+  Integrations. A subscription is a topic pattern plus a delivery endpoint; wildcards are supported
+  (course/* or * for everything). Acadio publishes no AsyncAPI document for this surface, so the
+  catalog below is transcribed from the provider's own webhook documentation and nothing is
+  synthesised.
+asyncapi_spec_published: false
+asyncapi_note: >-
+  No AsyncAPI, CloudEvents or event-schema document is published by Acadio. Payload schemas per topic
+  are not documented publicly; only topic names, meanings and the transport contract are.
+transport:
+  style: http-webhook
+  delivery: POST JSON to a subscriber-supplied HTTPS endpoint
+  endpoint_requirements: >-
+    Endpoints must be a secure, publicly accessible URL and must return a 2xx status code to confirm
+    receipt of the payload.
+  retries:
+    max_attempts: 6
+    trigger: any non-2xx response
+    note: Acadio retries delivery up to 6 times if it does not receive a 2xx status code.
+  failure_notification: >-
+    The tenant supplies an email address that receives a notification when webhook deliveries fail.
+security:
+  signing: HMAC SHA-256 over the JSON payload
+  header: X-Acadio-Hmac-Sha256
+  secret: >-
+    A per-integration secret key created by the tenant when the webhook integration is installed or
+    updated; used to verify the payload originated from Acadio and was not tampered with in transit.
+subscriptions:
+  pattern_syntax: 'slash-delimited topic patterns with * wildcard (examples: course/*, *)'
+  topic_count: 19
+topics:
+- name: Assessment Session Created
+  pattern: assessment/session/create
+  description: A new assessment session for a student has been created.
+- name: Assessment Session Completed
+  pattern: assessment/session/complete
+  description: An assessment session for a student was completed.
+- name: Course Completion Created
+  pattern: course/completion/create
+  description: A student has completed a course.
+- name: Course Completion Updated
+  pattern: course/completion/update
+  description: >-
+    A student course completion was moved from the Requires Approval state to the Ready state.
+- name: Course Completion Report
+  pattern: course/completion/report
+  description: >-
+    Student selects a regulator (or regulators) for a course completion — for example selecting a
+    regulator to report to at the end of the course.
+- name: Course Activity Created
+  pattern: course/activity/create
+  description: A student has started an activity. Fires at most once a day.
+- name: Course Activity Updated
+  pattern: course/activity/update
+  description: A student has completed an activity.
+- name: Credit Created
+  pattern: credits/credit/create
+  description: A credit was created.
+- name: Credit Updated
+  pattern: credits/credit/update
+  description: A credit was updated.
+- name: User Credit Created
+  pattern: credits/user/create
+  description: A credit was assigned to a user.
+- name: User Credit Updated
+  pattern: credits/user/update
+  description: A credit was updated in relation to a user.
+- name: User Created
+  pattern: identity/user/create
+  description: A new user was created.
+- name: User Updated
+  pattern: identity/user/update
+  description: A user was updated.
+- name: Survey Created
+  pattern: surveys/survey/create
+  description: A survey was created.
+- name: Survey Updated
+  pattern: surveys/survey/update
+  description: A survey was updated.
+- name: Survey Completed
+  pattern: surveys/survey/complete
+  description: A survey was completed by a user.
+- name: User Submission Created
+  pattern: course/submission/create
+  description: A new user submission was created.
+- name: User Submission Updated
+  pattern: course/submission/update
+  description: A user submission was updated.
+- name: Submission Feedback Created
+  pattern: course/submission/feedback
+  description: Feedback was added to a submission.
+domains:
+- assessment
+- course
+- credits
+- identity
+- surveys

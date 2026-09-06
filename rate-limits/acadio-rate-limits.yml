@@ -1,0 +1,38 @@
+generated: '2026-09-06'
+method: searched
+source: https://acadio.com/llms.txt and https://acadio.com/agents.md
+docs: https://acadio.com/agents.md
+description: >-
+  Acadio publishes exactly one rate-limit statement, in its agent instructions, and it is
+  qualitative. No numeric limit, window, burst or quota is published for either the storefront MCP
+  endpoint or the api.acadio.com LMS gateway, and no RateLimit-* or Retry-After header was returned
+  on a live unauthenticated request.
+limit_count: 0
+limits: []
+published_guidance:
+- surface: https://acadio.com/api/ucp/mcp
+  scope: per-ip
+  window: null
+  limit: null
+  burst: null
+  statement: >-
+    "Respect rate limits. The MCP endpoint is rate-limited per IP. Back off on 429 responses."
+  exhaustion_status: 429
+  source: https://acadio.com/agents.md
+headers_observed:
+  probed: '2026-09-06'
+  method: POST tools/list to https://acadio.com/api/ucp/mcp (HTTP 200)
+  ratelimit_headers: []
+  retry_after: false
+  note: >-
+    Response headers carried server, server-timing and x-request-id only. No X-RateLimit-*,
+    RateLimit-* (RFC 9238 draft) or Retry-After header was present on a successful response; whether
+    one appears on a 429 could not be established without deliberately exhausting the limit, which
+    this pipeline does not do.
+lms_surface:
+  base: https://api.acadio.com
+  limits_published: false
+  note: >-
+    No rate limits are documented for the LMS gateway. The webhook documentation states a delivery
+    retry budget (up to 6 attempts on a non-2xx) which governs Acadio's outbound calls to a
+    subscriber, not a subscriber's inbound calls to Acadio.

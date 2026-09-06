@@ -1,0 +1,71 @@
+generated: '2026-09-06'
+method: searched
+source: >-
+  https://acadio.statuspage.io/ (+ its api/v2 JSON endpoints, probed 2026-09-06),
+  https://acadio.com/pages/support , https://acadio.com/pages/contact-acadio ,
+  https://acadio.instantdocsbase.com/
+description: >-
+  What Acadio publishes about the operational lifecycle of its platform. A real Atlassian Statuspage
+  is operated and linked from the support and contact pages; there is no published versioning policy,
+  no deprecation policy, no Sunset/Deprecation header commitment, no SLA document and no changelog.
+status_page:
+  url: https://acadio.statuspage.io/
+  provider: Atlassian Statuspage
+  page_id: w5k594z9xt2y
+  page_name: Acadio
+  time_zone: America/New_York
+  machine_readable:
+  - url: https://acadio.statuspage.io/api/v2/status.json
+    status: 200
+  - url: https://acadio.statuspage.io/api/v2/summary.json
+    status: 200
+  - url: https://acadio.statuspage.io/api/v2/components.json
+    status: 200
+  components:
+  - name: Admin
+    description: Acadio hosted admin portal (https://admin.acadio.com)
+  - name: Student
+    description: Acadio hosted student portal (https://yourdomain.acadio.com)
+  - name: API
+    description: Acadio API Services
+  - name: Google Cloud
+  - name: Google Cloud Platform Google Cloud DNS
+  - name: Google Cloud Platform Google Compute Engine
+  - name: Google Cloud Platform Google Kubernetes Engine
+  - name: Google Cloud Platform Google Cloud Storage
+  - name: Google Cloud Platform Google Cloud SQL
+  note: >-
+    The status page is the only public artifact in which Acadio names an API as a first-class
+    platform component ("API — Acadio API Services"), and the only place it discloses its hosting
+    substrate (Google Cloud Platform).
+support:
+  email: support@acadio.com
+  phone: 407-904-9120
+  hours: Mon-Fri, 9am-5pm ET
+  stated_response_time: Within 24 hours
+  knowledge_base: https://acadio.instantdocsbase.com/
+versioning:
+  policy_published: false
+  scheme: null
+  note: >-
+    No API version is published for api.acadio.com. The storefront commerce surface is versioned by
+    the Universal Commerce Protocol date scheme it implements (2026-08-25 current, 2026-04-08 and
+    2026-01-23 also supported per https://acadio.com/.well-known/ucp) — a specification version, not
+    an Acadio-controlled one.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No deprecation policy, no notice period and no RFC 8594 Sunset/Deprecation header commitment is
+    published on any Acadio surface. The webhook documentation states only that "new webhook topic
+    subscriptions will be added in the future" and says nothing about removal.
+sla:
+  published: false
+changelog:
+  published: false
+  note: >-
+    No dated changelog or release-notes page exists. The knowledge base stamps each article with a
+    last-updated date (Webhooks Documentation 14 Jul 2026, JWT Auth Documentation 17 Jul 2026,
+    Google OAuth 2.0 Documentation 26 Feb 2026), and the LMS blog at
+    https://acadio.com/blogs/lms-articles is editorial, not a release feed.

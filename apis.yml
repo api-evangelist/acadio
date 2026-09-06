@@ -1,23 +1,134 @@
 aid: acadio
 name: Acadio
-description: 'Acadio is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Acadio is a professional-education technology company that builds and operates Acadio LMS, a
+  white-label, cloud-hosted learning management system purpose-built for continuing education, exam
+  prep and certification training. The platform runs branded student and admin portals on
+  acadio.com subdomains, handles course authoring, SCORM 1.2/2004 import, assessments, credits,
+  certificates and regulator reporting, and is sold as a flat per-learner, per-month subscription.
+  Acadio also sells its own FINRA securities licensing exam prep courses (SIE, Series 6, Series 7,
+  Series 63) direct to learners through a Shopify storefront at acadio.com. Its public integration
+  surface is documented in a knowledge base rather than an API reference: JWT single sign-on, Google
+  OAuth 2.0, and an HMAC-signed webhook bus with nineteen topics, plus native connectors for
+  Shopify, WooCommerce, BigCommerce, Zoom, ProctorFree and ChatGPT. The storefront additionally
+  exposes a live, unauthenticated Universal Commerce Protocol MCP endpoint for agent-driven
+  purchasing.
 url: https://raw.githubusercontent.com/api-evangelist/acadio/refs/heads/main/apis.yml
+image: https://acadio.com/cdn/shop/files/acadio_dark_social_banner.jpg?v=1762978383
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-06'
 modified: '2026-09-06'
 tags:
 - Company
-apis: []
+- Education
+- Learning Management System
+- Professional Education
+- Continuing Education
+- Certification
+- Exam Preparation
+- SCORM
+- Webhooks
+- Agentic Commerce
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: acadio-lms-platform
+  name: Acadio LMS Platform
+  description: >-
+    The Acadio LMS platform surface. Acadio operates an API gateway at api.acadio.com (its own
+    status page lists an "API — Acadio API Services" component) and documents integration entry
+    points in its knowledge base — JWT authentication, Google OAuth 2.0 and an HMAC-signed webhook
+    bus — but publishes no OpenAPI, no API reference and no route catalog. Every documented path is
+    an inbound integration hook rather than a callable REST resource.
+  humanURL: https://acadio.instantdocsbase.com/
+  baseURL: https://api.acadio.com
+  image: https://acadio.com/cdn/shop/files/acadio_dark_social_banner.jpg?v=1762978383
+  position: Producing
+  tags:
+  - Learning Management System
+  - Webhooks
+  - Authentication
+  properties:
+  - type: Authentication
+    url: authentication/acadio-authentication.yml
+  - type: Webhooks
+    url: asyncapi/acadio-lms-webhooks.yml
+  - type: Documentation
+    url: https://acadio.instantdocsbase.com/
+- aid: acadio-storefront-ucp
+  name: Acadio Storefront Agentic Commerce (UCP)
+  description: >-
+    Acadio's direct-to-learner course storefront implements the Universal Commerce Protocol over
+    MCP. A live, unauthenticated MCP endpoint at https://acadio.com/api/ucp/mcp answers tools/list
+    with thirteen catalog, cart, checkout and order tools carrying full JSON Schema inputSchemas,
+    and https://acadio.com/.well-known/ucp publishes the merchant profile (merchant_name "Acadio",
+    merchant_origin acadio.com). The surface is provided by the Shopify commerce platform and
+    served from Acadio's own domain.
+  humanURL: https://acadio.com/agents.md
+  baseURL: https://acadio.com/api/ucp/mcp
+  image: https://acadio.com/cdn/shop/files/acadio_dark_social_banner.jpg?v=1762978383
+  position: Producing
+  tags:
+  - Agentic Commerce
+  - MCP
+  - Universal Commerce Protocol
+  properties:
+  - type: MCPServer
+    url: mcp/acadio-mcp.yml
+  - type: LLMsTxt
+    url: llms/acadio-llms.txt
 common:
+- type: DomainSecurity
+  url: security/acadio-domain-security.yml
 - type: Website
-  url: https://equityzen.com/company/acadio
+  url: https://acadio.com/
+- type: Documentation
+  url: https://acadio.instantdocsbase.com/
+- type: Support
+  url: https://acadio.com/pages/support
+- type: Blog
+  url: https://acadio.com/blogs/lms-articles
+- type: Login
+  url: https://courses.acadio.com/
+- type: TermsOfService
+  url: https://acadio.com/policies/terms-of-service
+- type: PrivacyPolicy
+  url: https://acadio.com/policies/privacy-policy
+- type: StatusPage
+  url: https://acadio.statuspage.io/
+- type: MCPServer
+  url: mcp/acadio-mcp.yml
+- type: LLMsTxt
+  url: llms/acadio-llms.txt
+- type: WellKnown
+  url: well-known/acadio-well-known.yml
+- type: Webhooks
+  url: asyncapi/acadio-lms-webhooks.yml
+- type: Authentication
+  url: authentication/acadio-authentication.yml
+- type: OAuthScopes
+  url: scopes/acadio-scopes.yml
+- type: Conventions
+  url: conventions/acadio-conventions.yml
+- type: Conformance
+  url: conformance/acadio-conformance.yml
+- type: Lifecycle
+  url: lifecycle/acadio-lifecycle.yml
+- type: DataModel
+  url: data-model/acadio-data-model.yml
+- type: RateLimits
+  url: rate-limits/acadio-rate-limits.yml
+- type: Plans
+  url: plans/acadio-plans-pricing.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-09-06'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v3
