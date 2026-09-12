@@ -1,0 +1,14 @@
+{
+  "repo": "acadio",
+  "feeds": [
+    {
+      "source": "https://acadio.com/pages/support",
+      "feed_url": "https://acadio.com/pages/support",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-09-06T19:17:18Z"
+}
