@@ -93,6 +93,9 @@ apis:
     url: mcp/acadio-mcp.yml
   - type: LLMsTxt
     url: llms/acadio-llms.txt
+  x-surface: platform-generated
+  x-platform: shopify
+  x-platform-surface: ucp
 common:
 - type: DomainSecurity
   url: security/acadio-domain-security.yml
