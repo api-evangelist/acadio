@@ -21,7 +21,7 @@ modified: '2026-10-06'
 tags:
 - Company
 - Education
-- Learning Management System
+- LMS
 - Professional Education
 - Continuing Education
 - Certification
@@ -58,7 +58,7 @@ apis:
   image: https://acadio.com/cdn/shop/files/acadio_dark_social_banner.jpg?v=1762978383
   position: Producing
   tags:
-  - Learning Management System
+  - LMS
   - Webhook
   - Authentication
   tags_raw:
