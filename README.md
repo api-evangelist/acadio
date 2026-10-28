@@ -64,20 +64,123 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Acadio is a professional-education technology company that builds and operates **Acadio LMS**, a
-white-label, cloud-hosted learning management system for continuing education, exam prep and
-certification training. It also sells its own FINRA securities licensing exam prep courses (SIE,
-Series 6, Series 7, Series 63) direct to learners.
+Acadio is a professional-education technology company that builds and operates Acadio LMS, a white-label, cloud-hosted learning management system purpose-built for continuing education, exam prep and certification training. The platform runs branded student and admin portals on acadio.com subdomains, handles course authoring, SCORM 1.2/2004 import, assessments, credits, certificates and regulator reporting, and is sold as a flat per-learner, per-month subscription. Acadio also sells its own FINRA securities licensing exam prep courses (SIE, Series 6, Series 7, Series 63) direct to learners through a Shopify storefront at acadio.com. Its public integration surface is documented in a knowledge base rather than an API reference: JWT single sign-on, Google OAuth 2.0, and an HMAC-signed webhook bus with nineteen topics, plus native connectors for Shopify, WooCommerce, BigCommerce, Zoom, ProctorFree and ChatGPT. The storefront additionally exposes a live, unauthenticated Universal Commerce Protocol MCP endpoint for agent-driven purchasing.
 
-**What this profile found (2026-09-06).** Acadio publishes no OpenAPI and no API reference. Its
-LMS integration surface is documented in a knowledge base — inbound JWT single sign-on, Google
-OAuth 2.0, and an HMAC-signed outbound webhook bus with 19 topics — while `api.acadio.com` runs a
-live Kong gateway with no anonymous route. Its storefront, however, serves a real `llms.txt`, an
-`agents.md`, a Universal Commerce Protocol merchant profile at `/.well-known/ucp`, and a live,
-unauthenticated remote MCP endpoint at `https://acadio.com/api/ucp/mcp` that answers `tools/list`
-with 13 catalog, cart, checkout and order tools.
+**Areas:** Company · Education · LMS · Professional Education · Continuing Education · Certification · Exam Preparation · SCORM · Webhook · Agentic Commerce
 
-- Website: https://acadio.com/
-- Knowledge base: https://acadio.instantdocsbase.com/
-- Status: https://acadio.statuspage.io/
-- Secondary-market listing: https://equityzen.com/company/acadio
+## Acadio on APIs.io
+
+Everything profiled for Acadio is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/acadio/](https://apis.io/providers/acadio/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [Acadio LMS Platform](https://apis.io/apis/acadio/acadio-lms-platform/) — The Acadio LMS platform surface. Acadio operates an API gateway at api.acadio.com (its own status page lists an "API — Acadio API Services" component) and…
+- [Acadio Storefront Agentic Commerce (UCP)](https://apis.io/apis/acadio/acadio-storefront-ucp/) — Acadio's direct-to-learner course storefront implements the Universal Commerce Protocol over MCP. A live, unauthenticated MCP endpoint at…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Acadio Lms Webhooks](https://apis.io/asyncapis/acadio/acadio-lms-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Acadio Storefront (Universal Commerce Protocol)](https://apis.io/servers/acadio/acadio-storefront-universal-commerce-protocol/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Acadio Authentication](https://apis.io/security/acadio/acadio-authentication/)
+- [Acadio Domain Security](https://apis.io/security/acadio/acadio-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Acadio Scopes](https://apis.io/scopes/acadio/acadio-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Acadio Plans Pricing](https://apis.io/plans/acadio/acadio-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Acadio Rate Limits](https://apis.io/rate-limits/acadio/acadio-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://acadio.com/)
+- [Documentation](https://acadio.instantdocsbase.com/)
+- [Support](https://acadio.com/pages/support)
+- [Blog](https://acadio.com/blogs/articles)
+- [Terms of service](https://acadio.com/policies/terms-of-service)
+- [Privacy policy](https://acadio.com/policies/privacy-policy)
+- [Status](https://acadio.statuspage.io/)
+
+## API Evangelist rating
+
+**Kin Score 36.5** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 39.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 23.7 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 27.6 |
+
+**Agent readiness 34.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | platform (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | platform (partial credit) |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 34.3** — Education & Research
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/acadio/](https://apis.io/providers/acadio/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Acadio: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/acadio/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
